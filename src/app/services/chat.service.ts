@@ -159,7 +159,27 @@ export class ChatService {
 
   // Saves a new message containing an image in Firebase.
   // This first saves the image in Firebase storage.
-  saveImageMessage = async (file: any) => {};
+  saveImageMessage = async (file: any) => {
+    try {
+      const messageRef = await this.addMessage(null, this.LOADING_IMAGE_URL);
+      const filePath = `${this.auth.currentUser?.uid}/${file.name}`;
+      const newImageRef = ref(this.storage, filePath);
+      const fileSnapshot = await uploadBytesResumable(newImageRef, file);
+      const publicImageUrl = await getDownloadURL(newImageRef);
+
+      if (messageRef) {
+        await updateDoc(messageRef, {
+          imageUrl: publicImageUrl,
+          storageUri: fileSnapshot.metadata.fullPath,
+        });
+      }
+    } catch (error) {
+      console.error(
+        'There was an error uploading a file to Cloud Storage:',
+        error
+      );
+    }
+  };
 
   async updateData(path: string, data: any) {}
 
