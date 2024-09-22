@@ -6,3 +6,4 @@
 .firebase
 *-debug.log
 .runtimeconfig.json
+src/firebase-config.js
