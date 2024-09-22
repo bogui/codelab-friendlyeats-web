@@ -197,7 +197,36 @@ export class ChatService {
     return null;
   }
   // Requests permissions to show notifications.
-  requestNotificationsPermissions = async () => {};
+  requestNotificationsPermissions = async () => {
+    console.log('Requesting notifications permission...');
+    const permission = await Notification.requestPermission();
 
-  saveMessagingDeviceToken = async () => {};
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+      this.saveMessagingDeviceToken();
+    } else {
+      console.log('Unable to get permission to notify.');
+    }
+  };
+
+  saveMessagingDeviceToken = async () => {
+    try {
+      const currentToken = await getToken(this.messaging);
+      if (currentToken) {
+        console.log('Got FCM device token:', currentToken);
+        const tokenRef = doc(this.firestore, 'fcmTokens', currentToken);
+        await setDoc(tokenRef, {
+          uid: this.currentUser?.uid,
+        });
+
+        onMessage(this.messaging, (payload) => {
+          console.log('Message received. ', payload);
+        });
+      } else {
+        this.requestNotificationsPermissions();
+      }
+    } catch (error) {
+      console.log('Unable to get messaging token.', error);
+    }
+  };
 }
