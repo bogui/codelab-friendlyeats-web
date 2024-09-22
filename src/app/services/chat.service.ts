@@ -105,7 +105,41 @@ export class ChatService {
   addMessage = async (
     textMessage: string | null,
     imageUrl: string | null
-  ): Promise<void | DocumentReference<DocumentData>> => {};
+  ): Promise<void | DocumentReference<DocumentData>> => {
+    if (!textMessage && !imageUrl) {
+      console.log('No message to add');
+
+      return;
+    }
+
+    if (!this.currentUser) {
+      console.log('You must be signed in to add a message');
+
+      return;
+    }
+
+    const message: ChatMessage = {
+      name: this.currentUser.displayName,
+      profilePicUrl: this.currentUser.photoURL,
+      timestamp: serverTimestamp(),
+      uid: this.currentUser.uid,
+    };
+
+    textMessage && (message.text = textMessage);
+    imageUrl && (message.imageUrl = imageUrl);
+
+    try {
+      const newMessageRef = await addDoc(
+        collection(this.firestore, 'messages'),
+        message
+      );
+
+      return newMessageRef;
+    } catch (error) {
+      console.log('Error adding message', error);
+      return;
+    }
+  };
 
   // Saves a new message to Cloud Firestore.
   saveTextMessage = async (messageText: string) => {
