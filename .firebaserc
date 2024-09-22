@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "demo": "friendlychat-bogui"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
