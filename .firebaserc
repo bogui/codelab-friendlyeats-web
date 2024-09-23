@@ -1,6 +1,7 @@
 {
   "projects": {
-    "demo": "friendlychat-bogui"
+    "demo": "friendlychat-bogui",
+    "default": "friendlychat-bogui"
   },
   "targets": {},
   "etags": {},

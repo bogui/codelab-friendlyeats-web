@@ -40,7 +40,13 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
@@ -78,14 +84,14 @@
             "styles": ["src/styles.css"],
             "scripts": []
           }
-        },
-        "deploy": {
-          "builder": "@angular/fire:deploy",
-          "options": {
-            "version": 2,
-            "browserTarget": "friendlychat:build:production"
-          }
         }
+        // "deploy": {
+        //   "builder": "@angular/fire:deploy",
+        //   "options": {
+        //     "version": 2,
+        //     "browserTarget": "friendlychat:build:production"
+        //   }
+        // }
       }
     }
   }

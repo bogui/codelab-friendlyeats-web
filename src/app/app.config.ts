@@ -25,9 +25,34 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (!environment.production) {
+        connectAuthEmulator(auth, 'http://localhost:9099');
+      }
+      return auth;
+    }),
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      if (!environment.production) {
+        connectFirestoreEmulator(firestore, 'localhost', 8080);
+      }
+      return firestore;
+    }),
     provideMessaging(() => getMessaging()),
-    provideStorage(() => getStorage()),
+    provideStorage(() => {
+      const store = getStorage();
+      if (!environment.production) {
+        connectStorageEmulator(store, 'localhost', 9199);
+      }
+      return store;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions();
+      if (!environment.production) {
+        connectFunctionsEmulator(functions, 'localhost', 5001);
+      }
+      return functions;
+    }),
   ],
 };

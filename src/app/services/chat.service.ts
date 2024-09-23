@@ -83,14 +83,17 @@ export class ChatService {
   login() {
     signInWithPopup(this.auth, this.provider).then((result) => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
-      this.router.navigate(['/', 'chat']);
+      this.router.navigate(['/', 'chat']).then(() => {
+        this.saveMessagingDeviceToken();
+      });
 
       return credential;
     });
   }
 
   // Logout of Friendly Chat.
-  logout() {
+  logout(event: Event) {
+    event.preventDefault();
     signOut(this.auth)
       .then(() => {
         this.router.navigate(['/', 'login']);
